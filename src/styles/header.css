@@ -1,0 +1,30 @@
+header {
+  width: 100%;
+  height: 96px;
+  padding: 31px 0;
+  display: flex;
+  align-items: center;
+}
+
+.header_button {
+  height: 38px;
+  width: 42px;
+  margin-right: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #282828;
+}
+
+.header_text-button {
+  width: max-content;
+  padding: 0 10px;
+  background: transparent;
+  color: #639EFF;
+}
+
+.header_button-icon {
+  width: 22px;
+  height: 20px;
+}
