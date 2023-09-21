@@ -1,15 +1,16 @@
 <template>
   <div id="app">
+    <!-- <Header :undo="undoState" :redo="redoState" :toHeading="toHeading" :showPrompt='showPrompt' /> -->
     <Header :undo="undoState" :redo="redoState" :showPrompt='showPrompt' :getHtml='getHtml' />
-    <Main :state='state' :setState="setNewState" :currentWidth="currentWidth" :currentHeight="currentHeight" :nodeType="nodeType" />
+    <Main :state='state' :setState="setNewState" />
   </div>
 </template>
 
 <script>
-import Header from './components/Header/Header.vue'
-import Main from './components/Main/Main.vue'
-// eslint-disable-next-line standard/object-curly-even-spacing
-import {/* TEXT_ELEMENTS, */ BASE_STATE } from './utils/consts'
+import Header from './components/Header/Header'
+import Main from './components/Main/Main'
+import { BASE_STATE } from './utils/consts.js'
+import { htmlGetter } from './utils/helpers'
 export default {
   name: 'App',
   data: function () {
@@ -18,11 +19,9 @@ export default {
       story: [BASE_STATE],
       stateIndex: 0,
       changedIndex: 0,
-      currentHeight: NaN,
-      currentWidth: NaN,
       selected: false,
+      breakingSelected: NaN,
       selectedText: '',
-      currentElement: '',
       nodeType: ''
     }
   },
@@ -31,19 +30,21 @@ export default {
     Main
   },
   created () {
-    window.addEventListener('select', this.selecter)
-    window.addEventListener('mouseover', this.textAreaHandler)
-    window.addEventListener('mouseout', this.changesChecker)
+    window.addEventListener('mouseup', this.selecter)
   },
   destroyed () {
-    window.removeEventListener('select', this.selecter)
-    window.removeEventListener('mouseover', this.textAreaHandler)
-    window.removeEventListener('mouseout', this.changesChecker)
+    window.removeEventListener('mouseup', this.selecter)
   },
+
   methods: {
     setNewState (data) {
+      if (this.stateIndex < this.story.length - 1) {
+        const current = JSON.parse(JSON.stringify(this.story)).slice(0, this.stateIndex + 1)
+        this.story = current
+      }
       this.state = data
       this.story.push(data)
+      this.stateIndex += 1
     },
 
     undoState () {
@@ -65,24 +66,84 @@ export default {
     },
 
     showPrompt () {
-      const uri = prompt('Введите url изображения', 'www.examle.com')
+      const uri = prompt('Введите url изображения', 'www.example.com')
       console.log(uri)
     },
 
-    /* toHeading (target, text) {
-},
+    copyToClipBoard (textToCopy) {
+      navigator.clipboard.writeText(textToCopy)
+    },
 
-fromHeading (target, text) {
-} */
+    selecter (e) {
+      const range = window.getSelection().getRangeAt(0)
+      const start = range.startOffset
+      const end = range.endOffset
+      const index = e.target.id.replace(/\D*\d?-/, '')
+      if (index >= 0 && index !== '') {
+        const selectedText = this.state[index].content.substring(start, end)
+        this.selectedText = selectedText
+        if (selectedText === this.state[index].content) {
+          this.breakingSelected = 2
+        } else if (selectedText === '') {
+          this.breakingSelected = 0
+        } else {
+          this.breakingSelected = 1
+        }
+      }
+    },
 
     getHtml () {
-      console.dir(window.document)
-    },
+      const text = htmlGetter(this.state)
+      this.copyToClipBoard(text)
+    }
+    /*
+    toHeading () {
+      console.log(this.nodeType)
+      const tag = this.nodeType
+      const size = TEXT_ELEMENTS.findIndex(i => i === this.nodeType)
+      const newTag = size > 0 ? TEXT_ELEMENTS[size - 1] : 'h1'
+      if (this.breakingSelected === 2) {
+        this.state[this.indexOfSelect].tag = newTag
+      } else {
+        const parts = this.state[this.indexOfSelect].content.split(
+          this.selectedText
+        )
+        if (parts.length === 2) {
+          const newElements = []
+          newElements.push({
+            tag: tag,
+            content: parts[0]
+          })
+          newElements.push({
+            tag: newTag,
+            content: this.selectedText
+          })
+          newElements.push({
+            tag: tag,
+            content: parts[1]
+          })
+          const start = JSON.parse(JSON.stringify(this.state)).slice(
+            0, this.indexOfSelect
+          )
+          const end = JSON.parse(JSON.stringify(this.state)).slice(
+            this.indexOfSelect + 1
+          )
+          const res = [...start, ...newElements, ...end]
+          this.state = res
+          const newIndex = this.indexOfSelect + start.length
+          this.story.push(res)
+          this.indexOfSelect = newIndex
+          this.breakingSelected = 2
+        }
+      }
+      this.currentHeight = NaN
+      this.currentWidth = NaN
+      this.currentMargin = ''
+    }, */
 
-    selecter () {
-      const selectedText = window.getSelection().toString().replace('\n', ' ')
-      console.log(selectedText)
-    },
+    /* fromHeading (target, text) {
+} */
+    /*
 
     textAreaHandler (e) {
       if (e.target.id.split('-')[0] === 'text') {
@@ -102,13 +163,30 @@ fromHeading (target, text) {
     },
 
     changesChecker (e) {
-      console.log(e.target)
-    }
-  },
+      if (!this.selected) {
+        return
+      }
+      const ind = this.changedIndex
 
-  mounted () {
-    this.selecter()
+      if (!e.target.value) {
+        this.state[ind].tag = this.nodeType
+        this.selected = false
+      } else {
+        if (this.state[ind].content !== e.target.value) {
+          const duplicate = JSON.parse(JSON.stringify(this.state))
+          duplicate[ind].content = e.target.value
+          duplicate[ind].tag = this.nodeType
+          this.selected = false
+          this.state[ind].tag = this.nodeType
+          this.setNewState(duplicate)
+        }
+      }
+    } */
   }
+
+/*   mounted () {
+    this.selecter()
+  } */
 }
 </script>
 

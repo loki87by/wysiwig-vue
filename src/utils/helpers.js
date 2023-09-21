@@ -1,13 +1,7 @@
-export function debounce (f, t, args) {
-  let lastCall = Date.now()
-  let lastCallTimer = setTimeout(() => f(args), t)
-  return function () {
-    const previousCall = lastCall
-    lastCall = Date.now()
-
-    if (previousCall && lastCall - previousCall <= t) {
-      clearTimeout(lastCallTimer)
-    }
-    lastCallTimer = setTimeout(() => f(args), t)
-  }
+export const htmlGetter = (arr) => {
+  return arr.map((item) =>
+    item.tag === 'img'
+      ? `<img src="${item.content}" alt="${item.tag}"/>`
+      : `<${item.tag}>${item.content}</${item.tag}>`
+  ).join('')
 }

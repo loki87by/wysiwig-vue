@@ -18,6 +18,14 @@
     </div>
     <div class="header_button">
       <img
+        class="header_button-icon header_button-icon_up"
+        @click="toHeading()"
+        alt="to heading"
+        :src="thIcon"
+      />
+    </div>
+    <div class="header_button">
+      <img
         class="header_button-icon"
         @click="showPrompt()"
         alt="add image"
@@ -35,33 +43,22 @@
 import { NAVIGATION_LINKS } from '../../utils/consts' */
 import * as undoIcon from '../../assets/undo.svg'
 import * as redoIcon from '../../assets/redo.svg'
-/* import up from "../../assets/up.svg";
-import down from "../../assets/down.svg"; */
+import * as thIcon from '../../assets/up.svg'
+/* import down from "../../assets/down.svg"; */
 import * as imgIcon from '../../assets/img.svg'
 
 export default {
   name: 'Header',
-  props: ['undo', 'redo', 'showPrompt', 'getHtml'],
+  props: ['undo', 'redo', 'toHeading', 'showPrompt', 'getHtml'],
   data: function () {
     return {
       inputed: '',
       undoIcon,
       redoIcon,
-      imgIcon
-      /* nav: NAVIGATION_LINKS */
+      imgIcon,
+      thIcon
     }
   }
-  /* methods: {
-    filterItems (e) {
-      const text = e.target.value
-      this.inputed = text
-      /* debounce(this.filter, 1000, text) *
-    },
-
-    filterFromButton () {
-      this.filter(this.inputed)
-    }
-  } */
 }
 </script>
 

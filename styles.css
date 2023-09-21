@@ -31,39 +31,40 @@ body {
   width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6, p, textarea {
+.h1, .h2, .h3, .h4, .h5, .h6, .p {
   width: max-content;
   max-width: 100%;
   margin: 0;
   font-family: "Roboto";
+  line-height: 1.15;
 }
 
-h1 {
+.h1 {
   font-size: var(--h1);
 }
 
-h2 {
+.h2 {
   margin-top: 46px;
   font-size: var(--h2);
 }
 
-h3 {
+.h3 {
   font-size: var(--h3);
 }
 
-h4 {
+.h4 {
   font-size: var(--h4);
 }
 
-h5 {
+.h5 {
   font-size: var(--h5);
 }
 
-h6 {
+.h6 {
   font-size: var(--h6);
 }
 
-p {
+.p {
   font-size: var(--p);
 }
 
@@ -73,16 +74,11 @@ img {
   margin: 32px 0;
 }
 
-textarea {
-  width: 84%;
-  height: max-content;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  background-color: #1e1e1e;
-  color: #eaeaea;
+.divtext {
+  overflow: auto;
+  display: inline-block
 }
 
-textarea:focus {
-    outline: none;
+div:focus-visible {
+  outline: none;
 }
